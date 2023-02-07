@@ -11,15 +11,16 @@ class Downloader:
         self.delay = delay
         self.field_id = field_id
         self.compteur = 1
+        self.cursor = '*'
 
     def build_path(self):
         return self.data_dir+'/download/'+self.api_name + '/' +self.field_id
     
     def create_url (self  ) :
         if "C" in self.field_id : 
-            return self.api_path + str(self.field_id) + '&page=' + str(self.compteur)
+            return self.api_path + str(self.field_id) + '&cursor=' + str(self.cursor)
         else :
-            return self.api_path + "C" + str(self.field_id) + '&page=' + str(self.compteur)
+            return self.api_path + "C" + str(self.field_id) + '&cursor=' + str(self.cursor)
     
     def call_api (self ) : 
         url = self.create_url()
@@ -58,3 +59,4 @@ class Downloader:
                         data = self.call_api()
                         self.write_json(data)
             self.compteur += 1
+            self.cursor = data['meta']['next_cursor']
